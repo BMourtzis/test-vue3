@@ -1,5 +1,4 @@
-import { ref, computed, } from "vue"
-
+import { ref, computed } from "vue";
 
 export default function getTestString(num: Number) {
     let test = ref(num);
