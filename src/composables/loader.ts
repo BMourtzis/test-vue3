@@ -1,33 +1,57 @@
 import { ref, computed, Ref } from "vue";
 
-// let promiseQueue: Ref<Array<Promise<any>>> = ref([]);
-let promise: Ref<Promise<any>> = ref(new Promise(() => true));
+let promiseQueue: Array<QueueObj> = [];
 let awaiting: Ref<Boolean> = ref(false);
 
 export default function getQueuer() {
     const waiting = computed(() => {
-        return awaiting;
+        return awaiting.value;
     });
 
-    const getQueue = () => {
-
-    }
-
-    const insertToAwaitQueue = async (prom: Array<Promise<any>>) => {
-        await promise.value;
+    const insertToAwaitQueue = async (prom: Promise<any>) => {
+        return new Promise((resolve, reject) => {
+            promiseQueue.push(new QueueObj(prom, resolve, reject));
+            dequeue();
+        });
         
-        awaiting.value = true;
-        promise.value = Promise.all([
-            prom,
-            promise.value
-        ]);
-
-        awaiting.value = false;
     }
 
     return {
         waiting,
-        getQueue,
         insertToAwaitQueue
+    }
+}
+
+function dequeue() {
+    if(awaiting.value) {
+        return false;
+    }
+
+    const item = promiseQueue.shift();
+    if(!item) {
+        return false;
+    }
+
+    awaiting.value = true;
+    item.promise.then((value) => {
+        awaiting.value = false;
+        item.resolve(value);
+        dequeue();
+    }).catch((err) => {
+        awaiting.value = false;
+        item.reject(err);
+        dequeue()
+    })
+}
+
+class QueueObj {
+    promise: Promise<any>;
+    resolve: CallableFunction;
+    reject: CallableFunction;
+
+    constructor(prom: Promise<any>, res: CallableFunction, rej: CallableFunction) {
+        this.promise = prom;
+        this.resolve = res;
+        this.reject = rej;
     }
 }

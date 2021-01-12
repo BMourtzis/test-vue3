@@ -29,21 +29,73 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+<script>
+// import { Options, Vue } from 'vue-class-component';
+import loader from "@/composables/loader.ts";
 
-@Options({
+export default {
     props: {
-        msg: String
-    }
-})
-export default class HelloWorld extends Vue {
-    msg!: string;
-    
-    get test() {
-        return 3;
+        msg: {
+            type: String
+        } 
+    },
+    computed: {
+        test() {
+            return 3;
+        }
+    },
+    mounted() {
+        this.insertToAwaitQueue(new Promise(function (resolve) {
+            setTimeout(resolve, 5000);
+        })).then(() => {
+            console.log("after third");
+        });
+    },
+    setup() {
+        const {
+            waiting,
+            insertToAwaitQueue
+        } = loader();
+
+        return {
+            waiting,
+            insertToAwaitQueue
+        };
     }
 }
+
+// @Options({
+//     props: {
+//         msg: String
+//     }
+// })
+// export default class HelloWorld extends Vue {
+//     msg!: string;
+    
+//     get test() {
+//         return 3;
+//     }
+
+//     mounted() {
+//         this.insertToAwaitQueue(new Promise(function (resolve) {
+//             setTimeout(resolve, 8000);
+//         })).then(() => {
+//             console.log("after third");
+//         });
+//     }
+
+//     setup() {
+//         const {
+//             waiting,
+//             insertToAwaitQueue
+//         } = loader();
+
+//         return {
+//             waiting,
+//             insertToAwaitQueue
+//         }
+//     }
+// }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
