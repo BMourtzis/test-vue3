@@ -8,7 +8,7 @@ export default function getQueuer() {
         return awaiting.value;
     });
 
-    const insertToAwaitQueue = async (prom: Promise<any>) => {
+    const pushToAwaitQueue = async (prom: Promise<any>) => {
         return new Promise((resolve, reject) => {
             promiseQueue.push(new QueueObj(prom, resolve, reject));
             dequeue();
@@ -18,7 +18,7 @@ export default function getQueuer() {
 
     return {
         waiting,
-        insertToAwaitQueue
+        pushToAwaitQueue
     }
 }
 

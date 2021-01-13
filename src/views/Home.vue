@@ -22,7 +22,7 @@ export default {
         HelloWorld
     },
     mounted() {
-        this.insertToAwaitQueue(new Promise(function (resolve) {
+        this.pushToAwaitQueue(new Promise(function (resolve) {
             setTimeout(resolve, 1000);
         })).then(() => {
             console.log("after first");
@@ -30,7 +30,7 @@ export default {
 
         console.log("here");
 
-        this.insertToAwaitQueue(new Promise(function (resolve) {
+        this.pushToAwaitQueue(new Promise(function (resolve) {
             setTimeout(resolve,3000);
         })).then(() => {
             console.log("after second");
@@ -45,7 +45,7 @@ export default {
 
         const {
             waiting,
-            insertToAwaitQueue
+            pushToAwaitQueue
         } = loader();
 
         return {
@@ -53,7 +53,7 @@ export default {
             testString,
             testReaction,
             waiting,
-            insertToAwaitQueue
+            pushToAwaitQueue
         };
     }
 }

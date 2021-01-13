@@ -45,7 +45,7 @@ export default {
         }
     },
     mounted() {
-        this.insertToAwaitQueue(new Promise(function (resolve) {
+        this.pushToAwaitQueue(new Promise(function (resolve) {
             setTimeout(resolve, 5000);
         })).then(() => {
             console.log("after third");
@@ -54,12 +54,12 @@ export default {
     setup() {
         const {
             waiting,
-            insertToAwaitQueue
+            pushToAwaitQueue
         } = loader();
 
         return {
             waiting,
-            insertToAwaitQueue
+            pushToAwaitQueue
         };
     }
 }
