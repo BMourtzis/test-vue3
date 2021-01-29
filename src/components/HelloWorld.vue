@@ -1,6 +1,7 @@
 <template>
     <div class="hello">
         <h1>{{ msg }}</h1>
+        <button @click="plusOne">+1</button>
         <p>
             For a guide and recipes on how to configure / customize this project,<br>
             check out the
@@ -26,27 +27,31 @@
             <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
             <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
         </ul>
+        <div ref="btn"></div> 
     </div>
 </template>
 
-<script>
-// import { Options, Vue } from 'vue-class-component';
+<script lang="ts">
+import { defineComponent } from "vue";
 import loader from "@/composables/loader.ts";
+import service from "@/composables/service.ts";
 
-export default {
+export default defineComponent({
+    name: "HelloWorld",
     props: {
         msg: {
-            type: String
-        } 
+            Type: String,
+            required: true
+        }
     },
     computed: {
-        test() {
+        test(): number {
             return 3;
         }
     },
     mounted() {
-        this.pushToAwaitQueue(new Promise(function (resolve) {
-            setTimeout(resolve, 5000);
+        this.pushToAwaitQueue(new Promise(resolve => {
+            setTimeout(resolve, 5000)
         })).then(() => {
             console.log("after third");
         });
@@ -57,45 +62,18 @@ export default {
             pushToAwaitQueue
         } = loader();
 
+        const {
+            plusOne
+        } = service();
+
         return {
             waiting,
-            pushToAwaitQueue
+            pushToAwaitQueue,
+            plusOne
         };
     }
-}
 
-// @Options({
-//     props: {
-//         msg: String
-//     }
-// })
-// export default class HelloWorld extends Vue {
-//     msg!: string;
-    
-//     get test() {
-//         return 3;
-//     }
-
-//     mounted() {
-//         this.insertToAwaitQueue(new Promise(function (resolve) {
-//             setTimeout(resolve, 8000);
-//         })).then(() => {
-//             console.log("after third");
-//         });
-//     }
-
-//     setup() {
-//         const {
-//             waiting,
-//             insertToAwaitQueue
-//         } = loader();
-
-//         return {
-//             waiting,
-//             insertToAwaitQueue
-//         }
-//     }
-// }
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

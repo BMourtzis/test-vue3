@@ -3,26 +3,27 @@
         <img alt="Vue logo" src="../assets/logo.png">
         <HelloWorld msg="Welcome to Your Vue.js App"/>
 
-        {{testString}}
-        <button @click="testReaction">+1</button>
+        {{getNumber}}
+        <button @click="plusOne">+1</button>
         <p v-if="waiting">Loading</p>
         <p v-if="!waiting">Loaded</p>
     </div>
 </template>
 
-<script>
-// @ is an alias to /src
+<script lang="ts">
+import { defineComponent } from "vue";
 import HelloWorld from '@/components/HelloWorld.vue'
 import testStringFunction from "@/composables/test.ts";
 import loader from "@/composables/loader.ts";
+import service from "@/composables/service.ts";
 
-export default {
+export default defineComponent({
     name: 'Home',
     components: {
         HelloWorld
     },
     mounted() {
-        this.pushToAwaitQueue(new Promise(function (resolve) {
+        this.pushToAwaitQueue(new Promise( resolve => {
             setTimeout(resolve, 1000);
         })).then(() => {
             console.log("after first");
@@ -30,7 +31,7 @@ export default {
 
         console.log("here");
 
-        this.pushToAwaitQueue(new Promise(function (resolve) {
+        this.pushToAwaitQueue(new Promise(resolve => {
             setTimeout(resolve,3000);
         })).then(() => {
             console.log("after second");
@@ -48,13 +49,20 @@ export default {
             pushToAwaitQueue
         } = loader();
 
+        const {
+            plusOne,
+            getNumber
+        } = service();
+
         return {
             test,
             testString,
             testReaction,
             waiting,
-            pushToAwaitQueue
+            pushToAwaitQueue,
+            plusOne,
+            getNumber
         };
     }
-}
+});
 </script>

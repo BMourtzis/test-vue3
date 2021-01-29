@@ -1,13 +1,13 @@
-import { ref, computed } from "vue";
+import { ref, computed, Ref } from "vue";
 
-export default function getTestString(num: Number) {
-    let test = ref(num);
+export default function getTestString(num: number) {
+    let test: Ref<number> = ref(num);
     const testString = computed(() => {
         return "Test " + test.value;
     });
 
     const testReaction = () => {
-        test.value = test.value.valueOf() + 1;
+        test.value += 1;
     }
 
     return {
